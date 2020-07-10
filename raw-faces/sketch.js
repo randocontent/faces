@@ -39,7 +39,7 @@ function gotResults(err, result) {
   if (detections) {
     if (detections.length > 0) {
       // console.log(detections)
-      drawBox(detections);
+      // drawBox(detections);
       drawLandmarks(detections);
     }
   }
@@ -84,16 +84,18 @@ function drawLandmarks(detections) {
 }
 
 function drawPart(feature, closed) {
-  beginShape();
+	beginShape();
+	strokeWeight(10)
   for (let i = 0; i < feature.length; i += 1) {
     const x = feature[i]._x;
-    const y = feature[i]._y;
-    vertex(x, y);
+		const y = feature[i]._y;
+		point = (feature[i]._x, feature[0]._y)
+    // vertex(x, y);
   }
 
-  if (closed === true) {
-    endShape(CLOSE);
-  } else {
-    endShape();
-  }
+  // if (closed === true) {
+  //   endShape(CLOSE);
+  // } else {
+  //   endShape();
+  // }
 }
