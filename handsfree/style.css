@@ -68,6 +68,9 @@ aside:before {
 
 .handsfree-debugger {
   position: absolute;
-  top: 100px;
-  left: 20px;
+  top: 2em;
+  right: 2em;
+}
+.handsfree-debugger canvas {
+	width: 200px !important;
 }
