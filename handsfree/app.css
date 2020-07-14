@@ -1,3 +1,4 @@
+
 /* Handsfree stuff */
 .handsfree-hide-when-stopped {
   display: none;
@@ -9,11 +10,6 @@
   display: none;
 }
 
-button {
-  font-size: 24px;
-  padding: 20px;
-  position: relative;
-}
 
 #canvas-wrap {
   position: absolute;
@@ -23,37 +19,14 @@ button {
   height: 100%;
 }
 
-/* Footer/header */
-header,
 footer {
-  display: flex;
-  justify-content: space-between;
-  vertical-align: middle;
   position: fixed;
   width: 100%;
   left: 0;
+	bottom: 0;
+	padding: 1em;
 }
 
-header {
-  top: 0;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35);
-  z-index: 11;
-  background: #fff;
-}
-footer {
-  bottom: 0;
-  padding: 20px;
-  text-align: center;
-}
-
-footer button {
-  padding: 30px;
-  margin-right: 30px;
-}
-
-footer button.selected {
-  border: 5px solid #a00;
-}
 
 h1 {
   padding: 20px;

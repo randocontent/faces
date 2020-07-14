@@ -1,67 +1,64 @@
 <!DOCTYPE html>
+
 <head>
-  <!-- Handsfree.js dependencies -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/handsfree@6.0.3/dist/handsfreejs/handsfree.css"
-  />
-  <script src="https://unpkg.com/handsfree@6.0.3/dist/handsfreejs/handsfree.js"></script>
+	<!-- Handsfree.js dependencies -->
+	<link
+		rel="stylesheet"
+		href="https://unpkg.com/handsfree@6.0.3/dist/handsfreejs/handsfree.css"
+	/>
+	<script src="https://unpkg.com/handsfree@6.0.3/dist/handsfreejs/handsfree.js"></script>
 
-  <!-- Demo dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
-  />
+	<!-- Demo dependencies -->
+	<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+	<link
+		rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+	/>
 
-  <!-- Handsfree.js Stuff -->
-  <link rel="stylesheet" href="app.css" />
-  <script defer src="app.js"></script>
+	<link
+		rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"
+	/>
+	<!-- Handsfree.js Stuff -->
+	<link rel="stylesheet" href="app.css" />
+	<script defer src="app.js"></script>
 </head>
 <body>
-  <div id="canvas-wrap"></div>
+	<div class="container" id="canvas-wrap"></div>
 
-  <header>
-    <h1>
-      <img src="https://i.imgur.com/dPpgXq8.gif" style="margin-right: 10px" />
-      Handsfree.js
-      <div>
-        Visit <a href="https://handsfree.js.org">handsfree.js.org</a> for more
-        💻
-      </div>
-    </h1>
-    <div>
-      <button onclick="handsfree.start()" class="handsfree-hide-when-started">
-        Start Webcam
-      </button>
-      <button onclick="handsfree.stop()" class="handsfree-hide-when-stopped">
-        Stop Webcam
-      </button>
-    </div>
-    <div class="glitchButton" style="padding: 15px"></div>
-  </header>
 
-  <aside class="handsfree-hide-when-started">
-    <div>
-      <img style="float: right; width: 300px" src="https://i.imgur.com/85MkmfT.gif">
-      <h2>Handsfree Face Paint</h2>
-      <p>Start the webcam to paint with your face</p>
-      <ul>
-        <li>Smile to one side to click and paint</li>
-        <li>Select a color by raising an eyebrow</li>
-        <li><a href="https://dev.to/heyozramos/face-painting-with-p5-js-2b64">Tutorial</a></li>
-      </ul>
-    </div>
-  </aside>
+	<footer class="is-vcentered columns">
+		
+		<div class="column">
+			<button
+				onclick="handsfree.start()"
+				class="button is-family-monospace is-dark handsfree-hide-when-started"
+			>
+				Start Webcam
+			</button>
+			<button
+				onclick="handsfree.stop()"
+				class="button is-family-monospace is-dark handsfree-hide-when-stopped"
+			>
+				Stop Webcam
+			</button>
+		</div>
 
-  <footer>
-    <div id="colors"></div>
-    <div id="tools">
-      <button onclick='handsfree.emit("clear")'>❌ Clear</button>
-    </div>
-  </footer>
+		<div class="column has-text-centered">
+			<p>
+				Open mouth to draw
+			</p>
+		</div>
 
-  <!-- Glitch button -->
-  <script src="https://button.glitch.me/button.js"></script>
+		<div class="column has-text-right">
+			<button
+				class="is-family-monospace button"
+				onclick='handsfree.emit("clear")'
+			>
+				Clear
+			</button>
+		</div>
+	
+	</footer>
 </body>

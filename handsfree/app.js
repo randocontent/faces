@@ -64,12 +64,10 @@ Handsfree.use('p5.facePaint', {
     this.p5.stroke(this.p5.color(strokeColor))
 
     // Draw lines
-    if (head.state.smirk || head.state.smile) {
+    if (head.state.mouthOpen) {
       this.p5.line(this.x, this.y, this.lastX, this.lastY)
     }
 
-    if (head.state.browLeftUp) this.updateColor(1)
-    else if (head.state.browRightUp) this.updateColor(-1)
   },
 
   /**
