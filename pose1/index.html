@@ -19,40 +19,54 @@
 	</head>
 
 	<body>
+
 		<div class="columns container is-mobile">
-			<section class="column">
+
+			<section id="left-column" class="column">
+
 				<header class="columns">
-					<h1 class="column is-uppercase">Abstract you</h1>
-					<div class="column is-uppercase">Step #</div>
+					<div class="column">
+						<h1 class="is-uppercase">Abstract you</h1>
+					</div>
+					<div class="column has-text-right">
+						<div class="is-uppercase">Step #</div>
+					</div>
 				</header>
 
-				<section class="level" id="directions">
-					<p>
+				<section class="box has-text-light has-background-dark" id="directions">
+					<p class="is-italic">
 						Starting from the mark, begin
-						<strong>walking towards the camera</strong>.
+						<span class="has-text-weight-bold">walking towards the camera</span
+						>.
 					</p>
 				</section>
 
-				<section id="webcam-preview">
-					<div id="webcam-preview-placeholder">
-						<img src="4.jpg" alt="webcam preview">
-					</div>
-				</section>
-
-				<section id="controls">
-					<div class="block">
-						<button class="button is-white is-uppercase">Next Step</button>
-						<button class="button is-dark is-uppercase">Redo</button>
-					</div>
-				</section>
+			<section id="webcam-preview" class="level container">
+				<div id="webcam-preview-placeholder">
+					<img src="../images/ming.jpg" alt="webcam preview" />
+				</div>
 			</section>
 
-			<section class="column">
-				<section id="sketch">
+			<section id="controls">
+				<div class="columns">
+					<div class="column">
+						<button id="next-step" class="button is-white is-uppercase is-fullwidth">
+							Next Step
+						</button>
+					</div>
+					<div class="column has-text-right">
+						<button id="redo" class="button is-dark is-uppercase is-fullwidth">
+							Redo
+						</button>
+					</div>
+				</div>
+			</section>
+			</section>
+			<section class="column has-text-centered">
+				<section id="sketch has-background-white">
 					<div id="sketch-placeholder">
 						<p>Loading</p>
 					</div>
-					
 				</section>
 			</section>
 		</div>

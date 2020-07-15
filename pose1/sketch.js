@@ -1,28 +1,30 @@
-let img, capture;
+let img, capture, startButton, posePreview;
 
 function startWebcam() {
 	capture = createCapture(VIDEO);
 	capture.size(320, 240);
-	capture.hide();
+	select('#webcam-preview-placeholder').html('')
+	capture.parent('webcam-preview-placeholder')
+	// capture.hide();
 }
+
 function setup() {
-	hold = document.getElementById('sketch-placeholder');
-	placeholderW = hold.clientWidth;
-	placeholderH = hold.clientHeight;
-var canvas = createCanvas(placeholderW,placeholderH);
-canvas.parent('sketch-placeholder')
-	console.log(width)
-	console.log(height)
-	// startWebcam();
+	var canvas = createCanvas(400,400);
+	canvas.parent('sketch-placeholder');
+	startWebcam();
 
 	// mousePressed can accept a function name (not a function call) as an argument
 	// https://p5js.org/reference/#/p5.Element/mousePressed
+
+	startButton = select('#redo')
+	startButton.mousePressed(startWebcam)
 }
 
 function draw() {
 	background(255);
 	if (capture) {
-		image(capture, 0, 0, 320, 240);
+		// image(capture, 100, 100, 320, 240);
+		
 	}
-	filter(POSTERIZE,2);
+	filter(POSTERIZE, 2);
 }
