@@ -11,6 +11,12 @@ function startWebcam() {
 	// capture.hide();
 }
 
+// Only appears to work...
+function windowResized(){
+	let elWidth = select('#sketch-placeholder').width;
+	resizeCanvas(elWidth,elWidth*0.9);
+}
+
 function setup() {
 	
 	let elWidth = select('#sketch-placeholder').width;
@@ -23,6 +29,7 @@ function setup() {
 
 	startButton = select('#redo')
 	startButton.mousePressed(startWebcam)
+	
 	
 	poseNet = ml5.poseNet(capture, modelReady);
 	poseNet.on('pose', function(results) {
@@ -41,7 +48,7 @@ function draw() {
 		// image(capture, 100, 100, 320, 240);
 		
 	}
-	// filter(POSTERIZE, 2);
+
 	drawKeypoints();
   drawSkeleton();
 }
@@ -67,14 +74,14 @@ function drawKeypoints()  {
 
 // A function to draw the skeletons
 function drawSkeleton() {
-  // Loop through all the skeletons detected
+	// Loop through all the skeletons detected
   for (let i = 0; i < poses.length; i++) {
     let skeleton = poses[i].skeleton;
     // For every skeleton, loop through all body connections
     for (let j = 0; j < skeleton.length; j++) {
       let partA = skeleton[j][0];
       let partB = skeleton[j][1];
-      stroke(255, 0, 0);
+			stroke(255, 0, 0);
       line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
     }
   }

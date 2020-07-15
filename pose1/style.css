@@ -11,6 +11,6 @@ html,body {
 
 #webcam-preview-placeholder video {
 	object-fit: cover;
-	/* width: 200% !important; */
-	/* height: 400px !important; */
+	width: 200% !important;
+	height: 400px !important;
 }
