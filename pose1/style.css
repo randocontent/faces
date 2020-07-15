@@ -10,5 +10,7 @@ html,body {
 }
 
 #webcam-preview-placeholder video {
-	width: 100% !important;
+	object-fit: cover;
+	/* width: 200% !important; */
+	/* height: 400px !important; */
 }

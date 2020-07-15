@@ -8,6 +8,7 @@
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"
 		/>
+		<script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script>
 
 		<title>Welcome</title>
 		<script
@@ -19,56 +20,67 @@
 	</head>
 
 	<body>
-
-		<div class="columns container is-mobile">
-
-			<section id="left-column" class="column">
-
-				<header class="columns">
-					<div class="column">
+		<div class="tile is-ancestor">
+			<div id="left-column" class="tile is-parent is-vertical">
+				<header class="tile is-parent">
+					<div class="tile is-child">
 						<h1 class="is-uppercase">Abstract you</h1>
 					</div>
-					<div class="column has-text-right">
+					<div class="tile is-child has-text-right">
 						<div class="is-uppercase">Step #</div>
 					</div>
 				</header>
 
-				<section class="box has-text-light has-background-dark" id="directions">
-					<p class="is-italic">
-						Starting from the mark, begin
-						<span class="has-text-weight-bold">walking towards the camera</span
-						>.
-					</p>
-				</section>
+				<div class="tile is-vertical">
+					<section class="box" id="status"></section>
+					<section
+						class="box has-text-light has-background-dark"
+						id="directions"
+					>
+						<p class="is-italic">
+							Starting from the mark, begin
+							<span class="has-text-weight-bold" >walking towards the camera</span >.
+						</p>
+					</section>
 
-			<section id="webcam-preview" class="level container">
-				<div id="webcam-preview-placeholder">
-					<img src="../images/ming.jpg" alt="webcam preview" />
+					<section id="webcam-preview">
+						<div id="webcam-preview-placeholder">
+							<img src="../images/ming.jpg" alt="webcam preview" />
+						</div>
+					</section>
 				</div>
-			</section>
 
-			<section id="controls">
-				<div class="columns">
-					<div class="column">
-						<button id="next-step" class="button is-white is-uppercase is-fullwidth">
-							Next Step
-						</button>
-					</div>
-					<div class="column has-text-right">
-						<button id="redo" class="button is-dark is-uppercase is-fullwidth">
-							Redo
-						</button>
-					</div>
+				<div class="tile pt-4" id="controls">
+					
+							<div class="tile is-child">
+								<button
+									id="next-step"
+									class="button is-white is-uppercase"
+								>
+									Next Step
+								</button>
+							</div>
+							<div class="tile is-child has-text-right">
+								<button
+									id="redo"
+									class="button is-dark is-uppercase"
+								>
+									Redo
+								</button>
+							</div>
+					
 				</div>
-			</section>
-			</section>
-			<section class="column has-text-centered">
-				<section id="sketch has-background-white">
-					<div id="sketch-placeholder">
-						<p>Loading</p>
-					</div>
-				</section>
-			</section>
+			</div>
+
+			<div id="right-column" class="tile is-parent is-8">
+			<div class="tile is-child">
+					<section id="abstract" class="box">
+						<div id="sketch-placeholder">
+							<p>Loading</p>
+						</div>
+					</section>
+				</div>	
+			</div>
 		</div>
 	</body>
 </html>
