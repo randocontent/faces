@@ -1,15 +1,7 @@
-let img, capture, startButton, posePreview;
+let capture, posePreview;
+let webcamButton, imageButton, videoButton;
 let poseNet;
 let poses = [];
-
-
-function startWebcam() {
-	capture = createCapture(VIDEO);
-	capture.size(320, 240);
-	select('#webcam-preview-placeholder').html('')
-	capture.parent('webcam-preview-placeholder')
-	// capture.hide();
-}
 
 // Only appears to work...
 function windowResized(){
@@ -17,37 +9,81 @@ function windowResized(){
 	resizeCanvas(elWidth,elWidth*0.9);
 }
 
+function startWebcam() {
+	// Start a new video capture and place it in the tree
+	capture = createCapture(VIDEO, captureReady);
+	capture.size(320, 240);
+	select('#webcam-preview-placeholder').html('')
+	capture.parent('webcam-preview-placeholder')
+}
+
+function captureReady() {
+	
+	
+}
+
+function startImage() {
+	capture = loadImage('https://source.unsplash.com/600x400/?group,people',imageReady)
+}
+
+function imageReady(){
+	capture.resize(600,400)
+	console.log(capture)
+	let options = {imageScaleFactor: 1,minConfidence: 0.1}
+	poseNet = ml5.poseNet(modelReady, options)
+	poseNet.on('pose', results => {poses = results})
+}
+
+function modelReady() {
+	poseNet.multiPose(capture)
+	
+}
+
+function startVideo() {
+	
+}
+
+
+function modelReady() {
+	// select('#status').html('Model Loaded');
+	console.log('Model ready.')
+	console.dir(poses)
+}
+
 function setup() {
 	
 	let elWidth = select('#sketch-placeholder').width;
 	var canvas = createCanvas(elWidth,elWidth*0.9);
 	canvas.parent('sketch-placeholder');
-	startWebcam();
-
-	// mousePressed can accept a function name (not a function call) as an argument
-	// https://p5js.org/reference/#/p5.Element/mousePressed
-
-	startButton = select('#redo')
-	startButton.mousePressed(startWebcam)
 	
-	
+	// Start the poseNet loop and store the results in a global variable 'poses'
 	poseNet = ml5.poseNet(capture, modelReady);
 	poseNet.on('pose', function(results) {
-    poses = results;
+		poses = results;
 	});
 	
-}
-
-function modelReady() {
-  select('#status').html('Model Loaded');
+	// mousePressed can accept a function name (not a function call) as an argument
+	// https://p5js.org/reference/#/p5.Element/mousePressed
+	
+	webcamButton = select('#start-webcam')
+	webcamButton.mousePressed(startWebcam)
+	
+	imageButton = select('#start-image')
+	imageButton.mousePressed(startImage)
+	
+	videoButton = select('#start-video')
+	videoButton.mousePressed(startVideo)
+	
+	// To test the webcam it's easier to have it start on load
+	// startWebcam();
+	startImage();
+	// startVideo();
 }
 
 function draw() {
 	background(225);
-	if (capture) {
-		// image(capture, 100, 100, 320, 240);
-		
-	}
+
+	image(capture,0,0)
 
 	drawKeypoints();
   drawSkeleton();

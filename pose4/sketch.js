@@ -1,56 +1,37 @@
-let img, capture, startButton, posePreview;
+let webcamButton, imageButton, videoButton;
 let poseNet;
 let poses = [];
-
-
-function startWebcam() {
-	capture = createCapture(VIDEO);
-	capture.size(320, 240);
-	select('#webcam-preview-placeholder').html('')
-	capture.parent('webcam-preview-placeholder')
-	// capture.hide();
-}
-
-// Only appears to work...
-function windowResized(){
-	let elWidth = select('#sketch-placeholder').width;
-	resizeCanvas(elWidth,elWidth*0.9);
-}
 
 function setup() {
 	
 	let elWidth = select('#sketch-placeholder').width;
 	var canvas = createCanvas(elWidth,elWidth*0.9);
 	canvas.parent('sketch-placeholder');
-	startWebcam();
 
-	// mousePressed can accept a function name (not a function call) as an argument
-	// https://p5js.org/reference/#/p5.Element/mousePressed
+	sample = loadImage('https://source.unsplash.com/600x400/?group,people',imageReady)
+}
 
-	startButton = select('#redo')
-	startButton.mousePressed(startWebcam)
-	
-	
-	poseNet = ml5.poseNet(capture, modelReady);
-	poseNet.on('pose', function(results) {
-    poses = results;
-	});
-	
+function imageReady(){
+	sample.resize(600,400)
+	let options = {imageScaleFactor: 1,minConfidence: 0.1}
+	poseNet = ml5.poseNet(modelReady, options)
+	poseNet.on('pose', results => {poses = results})
 }
 
 function modelReady() {
-  select('#status').html('Model Loaded');
+	select('#status').html('Model Loaded');
+	poseNet.multiPose(sample)
 }
 
 function draw() {
 	background(225);
-	if (capture) {
-		// image(capture, 100, 100, 320, 240);
-		
-	}
+
+	// console.dir(img)
+	image(sample,0,0)
 
 	drawKeypoints();
-  drawSkeleton();
+	drawSkeleton();
+	
 }
 
 // A function to draw ellipses over the detected keypoints
@@ -66,7 +47,7 @@ function drawKeypoints()  {
       if (keypoint.score > 0.2) {
         fill(255, 0, 0);
         noStroke();
-        ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
+        ellipse(keypoint.position.x, keypoint.position.y, 5, 5);
       }
     }
   }
