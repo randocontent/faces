@@ -2,6 +2,7 @@ let webcamButton, imageButton, videoButton;
 let poseNet;
 let poses = [];
 let sample;
+let status;
 
 // https://source.unsplash.com/
 const sampleImageSource = 'https://source.unsplash.com/600x400/?group,people';
@@ -22,6 +23,7 @@ const pexelsApiKey = '563492ad6f91700001000001a03bbcffe1274ec3b613ef62e8fc0120';
  * Loads a new image and then calls imageReady()
  */
 function getNewImage() {
+	status.html('in getNewImage()');
 	// Todo: disable buttons until we're ready to try again
 	sample = loadImage(
 		'https://source.unsplash.com/600x400/?group,people',
@@ -33,7 +35,7 @@ function getNewImage() {
  * Handle the new image
  */
 function imageReady() {
-	console.log('in imageReady()');
+	status.html('in imageReady()');
 
 	// run poseNet on the image
 	poseNet.multiPose(sample);
@@ -48,6 +50,7 @@ function imageReady() {
  *
  */
 function getNewWebcam() {
+	status.html('in getNewWebcam()');
 	// Todo: disable buttons until we're ready to try again
 	sample = createCapture(VIDEO, webcamReady);
 }
@@ -56,7 +59,7 @@ function getNewWebcam() {
  * Handles the webcam feed
  */
 function webcamReady() {
-	console.log('in webcamReady()');
+	status.html('in webcamReady()');
 
 	sample.size(320, 240);
 	select('#webcam-preview-placeholder').html('');
@@ -67,6 +70,8 @@ function webcamReady() {
  * Load a new video, uses findSDVideo() to find the smallest file, and calls videoReady() and calls
  */
 function getNewVideo() {
+	status.html('in getNewVideo()');
+
 	// Todo: disable buttons until we're ready to try again
 	let newVideo = fetch(sampleVideoSource, {
 		headers: {
@@ -82,7 +87,11 @@ function getNewVideo() {
 		})
 		.then(result => {
 			let offset = Math.floor(Math.random() * 25);
+			console.log('before calling findSDVideo: ')
+			console.table(result.videos[offset].video_files)
 			let newVideo = findSDVideo(result.videos[offset].video_files);
+			console.log('newVideo after findSDVideo: ');
+			console.table(newVideo)
 			sample = createVideo(newVideo.link, videoReady);
 			sample.loop();
 			// sample.hide()
@@ -98,11 +107,12 @@ function getNewVideo() {
  * Return video with width < 640
  */
 function findSDVideo(videos) {
-	console.log('in findSDVideo()')
-	let width = 640;
+	status.html('in findSDVideo()');
+
+	let width = 740;
 	let small;
 	videos.forEach(video => {
-		if (video.width < width) {
+		if (video.width && video.width < width) {
 			small = video;
 			width = video.width;
 		}
@@ -114,34 +124,29 @@ function findSDVideo(videos) {
  * Handle the new video
  */
 function videoReady() {
+	status.html('in videoReady()');
+
 	let video = document.querySelector('video');
-	poseNet = ml5.poseNet(
-		video,
-		function() {
-			poseNet.on(
-				'post', 
-				function(results) {
-					poses = results;
-				}
-				)
-		}
-		)
+	video.width = width;
+	console.log('video: ')
+	console.dir(video)
+	poseNet = ml5.poseNet(video, modelReady);
+	poseNet.on('pose', function (results) {
+		poses = results;
+	});
 }
 
-function preload() {
-	 poseNet = ml5.poseNet(modelReady)
+function modelReady() {
+	status.html('Model ready');
 }
-function modelReady(){
-	console.log('Model Ready')
 
-}
 function setup() {
 	// Crude attemp at adaptive canvas
 	let elWidth = select('#sketch-placeholder').width;
 	var canvas = createCanvas(elWidth, elWidth * 0.9);
 	canvas.parent('sketch-placeholder');
 
-	
+	status = select('#status')
 	// Preprare controls
 
 	// select() takes a simple css selector-like syntax
@@ -162,7 +167,7 @@ function setup() {
 
 	// Get a sample on load
 	// sample = loadImage(sampleImageSource, imageReady);
-	// getNewVideo();
+	getNewVideo();
 }
 
 function draw() {
@@ -188,7 +193,7 @@ function drawKeypoints() {
 			if (keypoint.score > 0.2) {
 				fill(255, 0, 0);
 				noStroke();
-				ellipse(keypoint.position.x, keypoint.position.y, 5, 5);
+				ellipse(keypoint.position.x, keypoint.position.y+100, 5, 5);
 			}
 		}
 	}
@@ -206,9 +211,9 @@ function drawSkeleton() {
 			stroke(255, 0, 0);
 			line(
 				partA.position.x,
-				partA.position.y,
+				partA.position.y+100,
 				partB.position.x,
-				partB.position.y
+				partB.position.y+100
 			);
 		}
 	}
