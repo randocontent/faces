@@ -1,20 +1,37 @@
 let webcamButton, imageButton, videoButton;
 let poseNet;
 let poses = [];
+let sample;
 
+
+function getImage(){
+	sample = loadImage('https://source.unsplash.com/600x400/?group,people',newImage)
+
+}
+function newImage(){
+	console.log('new image')
+	poseNet.multiPose(sample)
+
+}
 function setup() {
+
 	
 	let elWidth = select('#sketch-placeholder').width;
 	var canvas = createCanvas(elWidth,elWidth*0.9);
 	canvas.parent('sketch-placeholder');
-
 	sample = loadImage('https://source.unsplash.com/600x400/?group,people',imageReady)
+	
+	
 }
 
 function imageReady(){
+	console.dir(sample)
 	sample.resize(600,400)
 	let options = {imageScaleFactor: 1,minConfidence: 0.1}
-	poseNet = ml5.poseNet(modelReady, options)
+	if (!poseNet) {
+		poseNet = ml5.poseNet(modelReady, options)
+	}
+	
 	poseNet.on('pose', results => {poses = results})
 }
 
