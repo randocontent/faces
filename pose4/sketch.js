@@ -1,33 +1,18 @@
-let img, capture, startButton, posePreview;
+let webcamButton, imageButton, videoButton;
 let poseNet;
 let poses = [];
-
-
-
-// Only appears to work...
-function windowResized(){
-	let elWidth = select('#sketch-placeholder').width;
-	resizeCanvas(elWidth,elWidth*0.9);
-}
-
-function preload() {
-}
 
 function setup() {
 	
 	let elWidth = select('#sketch-placeholder').width;
 	var canvas = createCanvas(elWidth,elWidth*0.9);
 	canvas.parent('sketch-placeholder');
-	// startWebcam();
 
-	img = loadImage('https://source.unsplash.com/600x400/?group,people',imageReady)
-	// img.size(640,426)
-	// img.hide()
-	
-	console.dir(img)
+	sample = loadImage('https://source.unsplash.com/600x400/?group,people',imageReady)
 }
+
 function imageReady(){
-	img.resize(600,400)
+	sample.resize(600,400)
 	let options = {imageScaleFactor: 1,minConfidence: 0.1}
 	poseNet = ml5.poseNet(modelReady, options)
 	poseNet.on('pose', results => {poses = results})
@@ -35,18 +20,14 @@ function imageReady(){
 
 function modelReady() {
 	select('#status').html('Model Loaded');
-	poseNet.multiPose(img)
+	poseNet.multiPose(sample)
 }
 
 function draw() {
 	background(225);
-	if (capture) {
-		// image(capture, 100, 100, 320, 240);
-		
-	}
 
 	// console.dir(img)
-	image(img,0,0)
+	image(sample,0,0)
 
 	drawKeypoints();
 	drawSkeleton();
