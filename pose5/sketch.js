@@ -57,7 +57,7 @@ function setup() {
 	var canvas = createCanvas(elWidth, elWidth * 0.9);
 	canvas.parent('sketch-placeholder');
 
-	slider = createSlider(0, 1, 3, 0.1);
+	slider = createSlider(0, 3, 1, 0.1);
 	status = select('#status');
 
 	// Get a sample on load
@@ -106,7 +106,7 @@ function drawBlob() {
 		noFill();
 		beginShape();
 		let noiseMax = slider.value();
-		for (let a = 0; a < TWO_PI; a += radians(26)) {
+		for (let a = 0; a < TWO_PI; a += radians(1)) {
 			let xoff = map(cos(a + phase), -1, 1, 0, noiseMax);
 			let yoff = map(sin(a + phase), -1, 1, 0, noiseMax);
 			let r = map(noise(xoff, yoff, zoff), 0, 1, radius, height / 2);
