@@ -1,3 +1,6 @@
+let hull = [];
+let index;
+
 let poseNet;
 let poses = [];
 let sample;
@@ -7,33 +10,32 @@ let phase = 0;
 let zoff = 0;
 let slider;
 
-		let noiseMax = 1;
-let blobParts = ['rightEye', 'leftEye', 'leftShoulder', 'rightShoulder'];
-
-let faceParts = ['rightEye', 'leftEye', 'nose', 'rightEar', 'leftEar'];
-
-let torsoParts = [
-	'rightShoulder',
-	'leftShoulder',
-	'rightElbow',
-	'leftElbow',
-	'rightWrist',
-	'leftWrist',
-];
-
-let legParts = [
-	'rightHip',
-	'leftHip',
-	'rightKnee',
-	'leftKnee',
-	'leftAnkle',
-	'rightAnkle',
-];
-
 let options = {
-	minConfidence: 0.9,
-	maxPoseDetections: 1,
+	minConfidence: 0.1,
 };
+
+
+let leftMost;
+let currentVertex;
+let nextVertex;
+
+function setup() {
+
+leftMost = createVector()
+currentVertex = createVector()
+nextVertex = createVector()
+
+	// Crude attemp at adaptive canvas
+	let elWidth = select('#sketch-placeholder').width;
+	var canvas = createCanvas(elWidth, elWidth * 0.9);
+	canvas.parent('sketch-placeholder');
+
+	slider = createSlider(0, 3, 1, 0.1);
+	status = select('#status');
+
+	// Get a sample on load
+	getNewWebcam();
+}
 // curl -H "Authorization: YOUR_API_KEY" \
 //  "https://api.pexels.com/videos/search?query=nature&per_page=1"
 const sampleVideoSource =
@@ -75,29 +77,16 @@ function modelReady() {
 	status.html('Model ready');
 }
 
-function setup() {
-	// Crude attemp at adaptive canvas
-	let elWidth = select('#sketch-placeholder').width;
-	var canvas = createCanvas(elWidth, elWidth * 0.9);
-	canvas.parent('sketch-placeholder');
-
-	// slider = createSlider(0, 1, 0.01, 0.01);
-	status = select('#status');
-
-	// Get a sample on load
-	getNewWebcam();
-}
-
 function draw() {
 	background(225);
 
 	// drawKeypoints();
 	// drawSkeleton();
-	drawFaceBlob();
-	// drawBodyBlob();
+	// drawBlob();
+	giftWrap();
 }
 
-function drawFaceBlob() {
+function drawBlob() {
 	/**
 	 * Loop through all poses
 	 */
@@ -107,75 +96,62 @@ function drawFaceBlob() {
 		 */
 		let p = poses[i].pose;
 
-		let radius = 20;
+		let radius = 100;
 		noFill();
 		stroke(255);
 		strokeWeight(1);
 
 		/**
-		 * Draw blob shape around nose
+		 * Draw a triangle between nose an shoulders
 		 */
-		push()
-		translate(p.nose.x, p.nose.y);
-		stroke(0);
-		strokeWeight(2);
-		noFill();
 		beginShape();
-		for (let a = 0; a < TWO_PI; a += 0.2) {
-			let xoff = map(cos(a + phase), -1, 1, 0, noiseMax);
-			let yoff = map(sin(a + phase), -1, 1, 0, noiseMax);
-			let r = map(noise(xoff, yoff, zoff), 0, 1, 100, 200);
-
-			let x = r * cos(a);
-			let y = r * sin(a);
-			vertex(x, y);
-		}
-
+		vertex(p.rightShoulder.x, p.rightShoulder.y);
+		vertex(p.nose.x, p.nose.y);
+		vertex(p.leftShoulder.x, p.leftShoulder.y);
 		endShape(CLOSE);
-		phase += 0.01;
-		zoff += 0.001;
-pop()
-		/**
-		 * Draw blob shape based on blobParts array with predefined points
-		 */
-		// create vectors from the points in the array
-		// create a loop to go through each point
-		// map the index to an angle (?) that can be used with the cos/sin functions
-		// that's it?
 	}
 }
 
-function drawBodyBlob() {
+// A function to draw ellipses over the detected keypoints
+function giftWrap() {
+	// Loop through all the poses detected
+	for (let i = 0; i < poses.length; i++) {
+		// For each pose detected, loop through all the keypoints
+		let pose = poses[i].pose.keypoints;
+		pose.sort((a, b) => a.position.x - b.position.x);
+		leftMost.x = pose[0].position.x;
+		leftMost.y = pose[0].position.y;
+		currentVertex = leftMost;
+		nextVertex.x = pose[1].position.x
+		nextVertex.y = pose[1].position.y
+		index = 2;
+		stroke(255);
+		strokeWeight(8);
+		for (let p of pose) {
+			// point(p.position.x,p.position.y)
+		}
+		point(leftMost.x, leftMost.y);
+		line(
+			currentVertex.x,
+			currentVertex.y,
+			nextVertex.x,
+			nextVertex.y
+		);
+		let checking = pose[index];
+		line(
+			currentVertex.x,
+			currentVertex.y,
+			checking.x,
+			checking.y
+		);
 
-
-	let points = [ ]
-	
-	poses.forEach((p) => {
-		p = p.pose;
-		points = [
-			createVector(p.leftEye.x, p.leftEye.y),
-			createVector(p.rightEye.x, p.rightEye.y),
-			createVector(p.rightShoulder.x, p.rightShoulder.y),
-			createVector(p.leftShoulder.x, p.leftShoulder.y)
-		]
-	})
-
-	translate(width/2,height/2)
-	stroke(100)
-	strokeWeight(20)
-	beginShape()
-	points.forEach((p, i) => {
-		let noiseMax = 1
-		let a = map(i, 0, points.length, 1, 360);
-		let xoff = map(cos(a), -1, 1, 0, noiseMax);
-		let yoff = map(sin(a), -1, 1, 0, noiseMax);
-		let r = map(noise(xoff, yoff, zoff), 0, 1, 0.8, 1.2);
-		let x = p.x * cos(a)*r;
-		let y = p.y * sin(a)*r;
-		vertex(x, y);
-	});
-	endShape(CLOSE);
-	zoff+=0.001
+		const a = p5.Vector.sub(nextVertex, currentVertex);
+		const b = p5.Vector.sub(checking, currentVertex);
+		const cross = a.cross(b);
+		if (cross > 0) {
+			console.log(cross.z);
+		}
+	}
 }
 
 // A function to draw ellipses over the detected keypoints
