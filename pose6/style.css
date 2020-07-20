@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+
+html,body {
+	background-color: #111;
+	color: #eee;
+	padding: 2rem;
+	font-family: 'Space Mono', monospace;
+
+}
+
+#webcam-preview-placeholder video {
+	object-fit: cover;
+}
+
+#sketch-placeholder {
+	/* background-color: #f5f5f5; */
+}
+#sketch-placeholder canvas {
+	margin: 0 auto;
+}
