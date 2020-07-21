@@ -32,7 +32,12 @@ function setup() {
 
 	// create an image using the p5 dom library
 	// call modelReady() when it is loaded
-	img = createImg('https://source.unsplash.com/640x960/?person,portrait', '', '', imageReady);
+	img = createImg(
+		'https://source.unsplash.com/640x960/?person,full,body',
+		'',
+		'',
+		imageReady
+	);
 	img.size(640, 960);
 
 	img.hide(); // hide the image in the browser
@@ -45,6 +50,7 @@ function imageReady() {
 	let options = {
 		imageScaleFactor: 1,
 		minConfidence: 0.1,
+		maxPoseDetections: 1,
 	};
 
 	// assign poseNet
@@ -70,13 +76,14 @@ function draw() {
 	if (poses.length > 0) {
 		image(img, 0, 0, 640, 960);
 		// drawSkeleton(poses);
-		drawKeypoints(poses);
+		drawBlob(poses);
+		drawKeypoints();
 	}
 }
 
-function blob(posX,posY,radius) {
+function blob(posX, posY, radius) {
 	push();
-	translate(posX,posY);
+	translate(posX, posY);
 	stroke(0);
 	strokeWeight(2);
 	noFill();
@@ -116,7 +123,7 @@ function pointOnCircle(posX, posY, radius, angle) {
 
 // The following comes from https://ml5js.org/docs/posenet-webcam
 // A function to draw ellipses over the detected keypoints
-function drawKeypoints() {
+function drawBlob() {
 	// Loop through all the poses detected
 	for (let i = 0; i < poses.length; i++) {
 		// For each pose detected, loop through all the keypoints
@@ -130,12 +137,12 @@ function drawKeypoints() {
 		// hexagon(p.leftShoulder.x, p.leftShoulder.y, radius);
 		// hexagon(p.nose.x, p.nose.y, radius);
 
-		beginShape();
-		vertex(p.rightShoulder.x, p.rightShoulder.y);
-		vertex(p.nose.x, p.nose.y);
-		vertex(p.leftShoulder.x, p.leftShoulder.y);
-		endShape(CLOSE);
-
+		// beginShape();
+		// vertex(p.rightShoulder.x, p.rightShoulder.y);
+		// vertex(p.nose.x, p.nose.y);
+		// vertex(p.leftShoulder.x, p.leftShoulder.y);
+		// endShape(CLOSE);
+		push();
 		translate(p.nose.x, p.nose.y);
 		stroke(0);
 		strokeWeight(2);
@@ -148,12 +155,12 @@ function drawKeypoints() {
 			let r = map(noise(xoff, yoff, zoff), 0, 1, radius, height / 2);
 			let x = r * cos(a);
 			let y = r * sin(a);
-			vertex(x, y);
+			curveVertex(x, y);
 		}
 		endShape(CLOSE);
 		phase += 0.003;
 		zoff += 0.01;
-	
+		pop();
 
 		torsoParts.forEach(part => {
 			// hexagon(round(p[part].x), round(p[part].y), radius);
@@ -177,6 +184,40 @@ function drawKeypoints() {
 	}
 }
 
+// A function to draw ellipses over the detected keypoints
+function drawKeypoints() {
+	// Loop through all the poses detected
+	for (let i = 0; i < poses.length; i++) {
+		// For each pose detected, loop through all the keypoints
+		let pose = poses[i].pose;
+		for (let j = 0; j < pose.keypoints.length; j++) {
+			// A keypoint is an object describing a body part (like rightArm or leftShoulder)
+			let keypoint = pose.keypoints[j];
+			// Only draw an ellipse is the pose probability is bigger than 0.2
+			if (keypoint.score > 0.1) {
+				fill(0, 0, 255);
+				noStroke();
+				ellipse(keypoint.position.x, keypoint.position.y, 9, 9);
+			}
+		}
+		push();
+		beginShape();
+		for (let j = 0; j < pose.keypoints.length; j++) {
+			// A keypoint is an object describing a body part (like rightArm or leftShoulder)
+			let keypoint = pose.keypoints[j];
+			// Only draw an ellipse is the pose probability is bigger than 0.2
+			if (keypoint.score > 0.1) {
+				noFill();
+				stroke('red');
+				strokeWeight(3);
+
+				curveVertex(keypoint.position.x, keypoint.position.y);
+			}
+		}
+		endShape(CLOSE);
+		pop();
+	}
+}
 // A function to draw the skeletons
 function drawSkeleton() {
 	// Loop through all the skeletons detected

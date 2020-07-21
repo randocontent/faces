@@ -25,10 +25,13 @@ const pexelsApiKey = '563492ad6f91700001000001a03bbcffe1274ec3b613ef62e8fc0120';
 function getNewImage() {
 	status.html('in getNewImage()');
 	// Todo: disable buttons until we're ready to try again
-	sample = loadImage(
+	sample = createImg(
 		'https://source.unsplash.com/600x400/?group,people',
+		'',
+		'', // no CORS
 		imageReady
 	);
+	sample.hide()
 }
 
 /**
@@ -36,13 +39,17 @@ function getNewImage() {
  */
 function imageReady() {
 	status.html('in imageReady()');
+	console.log('sample from imageReady(): ', sample)
 
 	// run poseNet on the image
 	poseNet.multiPose(sample);
+	poseNet.on('pose', function (results) {
+		poses = results;
+});
 
 	// show the source image in the sidebar
-	select('#webcam-preview-placeholder').html('');
-	sample.parent('webcam-preview-placeholder');
+	select('#webcam-preview-placeholder').child(sample)
+	sample.show()
 }
 
 /**
@@ -126,11 +133,11 @@ function findSDVideo(videos) {
 function videoReady() {
 	status.html('in videoReady()');
 
-	let video = document.querySelector('video');
-	video.width = width;
+	sample = document.querySelector('video');
+	sample.width = width;
 	console.log('video: ')
-	console.dir(video)
-	poseNet = ml5.poseNet(video, modelReady);
+	console.dir(sample)
+	poseNet = ml5.poseNet(sample, modelReady);
 	poseNet.on('pose', function (results) {
 		poses = results;
 	});
@@ -146,7 +153,10 @@ function setup() {
 	var canvas = createCanvas(elWidth, elWidth * 0.9);
 	canvas.parent('sketch-placeholder');
 
+	poseNet = ml5.poseNet(modelReady);
+
 	status = select('#status')
+
 	// Preprare controls
 
 	// select() takes a simple css selector-like syntax
@@ -167,7 +177,7 @@ function setup() {
 
 	// Get a sample on load
 	// sample = loadImage(sampleImageSource, imageReady);
-	getNewVideo();
+	// getNewVideo();
 }
 
 function draw() {
