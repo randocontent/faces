@@ -78,7 +78,7 @@ function draw() {
  
 	push()
 	fill(50)
-	ellipse(width/2,height/2,.5/micLevel)
+	ellipse(width/2,height/2,micLevel*100000)
 
 	pop()
 }
