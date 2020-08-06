@@ -19,8 +19,14 @@ function setup() {
 
 	fft = new p5.FFT();
 	fft.setInput(mic);
+	getAudioContext().suspend();
+
 
 	tape();
+}
+
+function mousePressed() {
+  userStartAudio();
 }
 
 function windowResized() {
