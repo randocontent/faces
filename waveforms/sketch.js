@@ -2,7 +2,8 @@ let mic, recorder, soundFile, fft;
 let song;
 let recordingState = 0;
 let micLevel;
-
+var context = new AudioContext();
+ 
 let yoff = 0.0;
 
 function setup() {
@@ -32,7 +33,12 @@ function draw() {
 
 	background(200);
 	noStroke();
-
+	document.querySelector('button').addEventListener('click', function() {
+		context.resume().then(() => {
+			console.log('Playback resumed successfully');
+		});
+	});
+	
 	
 	let step = 16;
 	
