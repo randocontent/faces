@@ -8,7 +8,7 @@ function setup() {
 	createCanvas(windowWidth, windowHeight);
 
 	mic = new p5.AudioIn();
-	// mic.start();
+	mic.start();
 
 	recorder = new p5.SoundRecorder();
 	recorder.setInput(mic);
@@ -17,6 +17,7 @@ function setup() {
 
 	fft = new p5.FFT();
 	fft.setInput(mic);
+	tape();
 }
 
 function windowResized() {
@@ -70,7 +71,6 @@ function draw() {
 	vertex(width, height);
 	vertex(0, height);
 	endShape(CLOSE);
-	tape();
 }
 
 function tape() {
